@@ -1,6 +1,6 @@
 <template>
-  <div class="edit-form">
-    <h4>Student</h4>
+  <div  class="edit-form">
+    <h4></h4>
     <form>
       <div class="form-group">
         <label for="name">Name</label>
@@ -10,6 +10,7 @@
       </div>
       <div class="form-group">
         <label for="age">Age</label>
+
         <input type="text" class="form-control" id="age"
                v-model="currentStudent.age"
         />
@@ -42,13 +43,14 @@
     </button>
     <p>{{ message }}</p>
   </div>
-  <div>
-    <br />
-    <p>Please click on a student...</p>
-  </div>
+
 </template>
 <script>
+
 import StudentsDataServices from "@/service/StudentsDataServices";
+/*
+import StudentList from "@/components/StudentList";
+*/
 export default {
   name: "student_compo",
   data() {
@@ -57,6 +59,10 @@ export default {
       message: ''
     };
   },
+  // components:{
+  //   StudentList,
+  //
+  // },
   methods: {
     getStudent(id) {
       StudentsDataServices.get(id)

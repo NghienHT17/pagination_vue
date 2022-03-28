@@ -13,7 +13,7 @@ const routes=[
         component: import("./components/AddStudent")
     },
     {
-        path:"/:id",
+        path:"/students/:id",
         name:"student-details",
         component: import("./components/Student")
     }

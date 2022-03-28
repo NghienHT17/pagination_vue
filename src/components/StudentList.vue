@@ -34,10 +34,10 @@
       <td>{{student.age}}</td>
       <td>{{student.active}}</td>
       <td>
-        <button  type="button" class="btn btn-warning">
-        <a href="'/students/' + student.id">
+        <button @click="editStudent(student)"  type="button" class="btn btn-warning">
+<!--        <a href="'/students/' + {{student.id}}">-->
           Edit
-        </a>
+<!--        </a>-->
 
 <!--        //lam sai, dung ra can truyen data cua thang currentstudent vao thang component Student-->
       </button>
@@ -60,7 +60,8 @@
 
 <script>
 import StudentsDataServices from "../service/StudentsDataServices";
-
+// import student from "@/components/Student";
+// // import Student from "@/components/Student";
 
 export default {
   name: "student-list",
@@ -73,6 +74,9 @@ export default {
 
 
     }
+  },
+  props:{
+
   },
   methods: {
     retrieveStudents() {
@@ -98,23 +102,17 @@ export default {
     addStudent(){
       this.$router.push({ name: "add"});
     },
-    // updateStudent(student){
-    //   //cần truyền tham số vào thằng update nếu ko sẽ nhảy sang component student
-    //   this.currentStudent= student;
-    //   StudentsDataServices.update(this.currentStudent.id, this.currentStudent)
-    //       //logic xử lí thế này là sai, chỗ này cần truyền data của curentindex,student sang cho thằng student.vue
-    //       .then(response => {
-    //         console.log(response.data);
-    //         // this.message = 'The student was updated successfully!';
-    //
-    //         console.log("student was updated!")
-    //
-    //         this.$router.push({ name: "students" });
-    //       })
-    //       .catch(e => {
-    //         console.log(e);
-    //       });
-    // },
+
+
+    editStudent(student){
+          const id = student.id;
+      this.$emit('selectedStudent',student)
+      // this.currentIndex = student.id;
+      this.$router.push({path:`/students/${id}`});
+      // this.$router.push({ name: "/students/"+ student.id});
+
+
+    },
     deleteStudent(student){
       this.currentStudent= student;
       StudentsDataServices.delete(this.currentStudent.id)
@@ -157,3 +155,20 @@ export default {
 <style>
 
 </style>
+<!--// updateStudent(student){-->
+<!--//   //cần truyền tham số vào thằng update nếu ko sẽ nhảy sang component student-->
+<!--//   this.currentStudent= student;-->
+<!--//   StudentsDataServices.update(this.currentStudent.id, this.currentStudent)-->
+<!--//       //logic xử lí thế này là sai, chỗ này cần truyền data của curentindex,student sang cho thằng student.vue-->
+<!--//       .then(response => {-->
+<!--//         console.log(response.data);-->
+<!--//         // this.message = 'The student was updated successfully!';-->
+<!--//-->
+<!--//         console.log("student was updated!")-->
+<!--//-->
+<!--//         this.$router.push({ name: "students" });-->
+<!--//       })-->
+<!--//       .catch(e => {-->
+<!--//         console.log(e);-->
+<!--//       });-->
+<!--// },-->

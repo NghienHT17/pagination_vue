@@ -10,9 +10,9 @@
 
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-<!--          <li class="nav-item active">-->
-<!--            <router-link to="/" class="nav-link">List</router-link>-->
-<!--          </li>-->
+          <li class="nav-item active">
+            <router-link to="/" class="nav-link">List</router-link>
+          </li>
           <li class="nav-item active">
             <router-link to="/add" class="nav-link">Add </router-link>
           </li>
