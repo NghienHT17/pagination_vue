@@ -2,15 +2,33 @@
   <div class="col-md-8">
     <div class="input-group mb-3">
       <input type="text" class="form-control" placeholder="Search by Name"
-             v-model="name"/>
+             v-model="nameToSearch"/>
       <div class="input-group-append">
         <button class="btn btn-outline-secondary" type="button"
-                @click="searchName"
+                @click="page = 1; getStudentList();"
         >
           Search
         </button>
       </div>
     </div>
+  </div>
+  <div class="col-md-12">
+    <div class="mb-3">
+      Students per Page:
+      <select v-model="pageSize" @change="handlePageSizeChange()">
+        <option v-for="size in pageSizes" :key="size" :value="size">
+          {{ size }}
+        </option>
+      </select>
+    </div>
+    <b-pagination
+        v-model="page"
+        :total-rows="count"
+        :per-page="pageSize"
+        prev-text="Prev"
+        next-text="Next"
+        @change="handlePageChange"
+    ></b-pagination>
   </div>
   <h3>Student List</h3>
   <table class="table">
@@ -27,7 +45,7 @@
     <tr
         v-for="(student) in students"
         :key=student.id
-        >
+    >
 
       <th scope="row">{{student.id}}</th>
       <td>{{student.name}}</td>
@@ -35,12 +53,12 @@
       <td>{{student.active}}</td>
       <td>
         <button @click="editStudent(student)"  type="button" class="btn btn-warning">
-<!--        <a href="'/students/' + {{student.id}}">-->
+          <!--        <a href="'/students/' + {{student.id}}">-->
           Edit
-<!--        </a>-->
+          <!--        </a>-->
 
-<!--        //lam sai, dung ra can truyen data cua thang currentstudent vao thang component Student-->
-      </button>
+          <!--        //lam sai, dung ra can truyen data cua thang currentstudent vao thang component Student-->
+        </button>
         <button @click="deleteStudent(student)" type="button" class="btn btn-danger">
           Delete
         </button>
@@ -64,48 +82,80 @@ import StudentsDataServices from "../service/StudentsDataServices";
 // // import Student from "@/components/Student";
 
 export default {
-  name: "student-list",
+  name: "paging-list",
   data() {
     return {
-      name: "",
+      nameToSearch: "",
       students: [],
       currentIndex: -1,
-      currentStudent: null
+      currentStudent: null,
+      searchName: "",
+      page: 1,
+      count: 0,
+      pageSize: 3,
+      pageSizes: [3, 6, 9],
 
 
     }
   },
-  props:{
 
-  },
   methods: {
+    getRequestParams(nameToSearch, page, pageSize) {
+      let params = {};
+      if (nameToSearch) {
+        params["name"] = nameToSearch;
+      }
+      if (page) {
+        params["page"] = page - 1;
+      }
+      if (pageSize) {
+        params["size"] = pageSize;
+      }
+      return params;
+    },
     getStudentList() {
-      StudentsDataServices.getAll()
-          .then(response => {
-            this.students = response.data;
+      const params = this.getRequestParams(
+          this.nameToSearch,
+          this.page,
+          this.pageSize
+      );
+      StudentsDataServices.getAll(params)
+          .then((response) => {
+            const { students, totalStudents } = response.data;
+            this.students = students;
+            this.count = totalStudents;
             console.log(response.data);
           })
-          .catch(e => {
+          .catch((e) => {
             console.log(e);
           });
     },
-    searchName() {
-      StudentsDataServices.findByName(this.name)
-          .then(response => {
-            this.students = response.data;
-            console.log(response.data);
-          })
-          .catch(e => {
-            console.log(e);
-          });
+    handlePageChange(value) {
+      this.page = value;
+      this.getStudentList();
     },
+    handlePageSizeChange() {
+
+      this.page = 1;
+      this.getStudentList();
+    },
+    // searchName() {
+    //   StudentsDataServices.findByName(this.name)
+    //       .then(response => {
+    //         this.students = response.data;
+    //         console.log(response.data);
+    //       })
+    //       .catch(e => {
+    //         console.log(e);
+    //       });
+    // },
     addStudent(){
       this.$router.push({ name: "add"});
     },
 
 
     editStudent(student){
-          const id = student.id;
+      const id = student.id;
       this.$emit('selectedStudent',student)
       // this.currentIndex = student.id;
       this.$router.push({path:`/students/${id}`});

@@ -16,7 +16,13 @@ const routes=[
         path:"/students/:id",
         name:"student-details",
         component: import("./components/Student")
+    },
+    {
+        path:"/getByPaging",
+        name:"paging-list",
+        component: import("./components/PagingList")
     }
+
 
 ];
 const router = createRouter({

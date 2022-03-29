@@ -16,6 +16,10 @@
           <li class="nav-item active">
             <router-link to="/add" class="nav-link">Add </router-link>
           </li>
+          <li class="nav-item active">
+            <router-link to="/getByPaging" class="nav-link">Pageable </router-link>
+          </li>
+
 
         </ul>
 <!--        <form class="form-inline my-2 my-lg-0">-->

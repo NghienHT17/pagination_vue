@@ -52,28 +52,33 @@ import StudentsDataServices from "@/service/StudentsDataServices";
 import StudentList from "@/components/StudentList";
 */
 export default {
-  name: "student_compo",
-  data() {
-    return {
-      currentStudent: null,
-      message: ''
-    };
-  },
-  // components:{
-  //   StudentList,
-  //
-  // },
-  methods: {
-    getStudent(id) {
-      StudentsDataServices.get(id)
+  created() {
+    console.log(this.$route);
+    this.id=this.$route.params.id;
+    console.log("//////////");
+    console.log(this.id);
+    console.log("//////////");
+
+      // id = this.$route.params.id
+
+      StudentsDataServices.get(this.id)
           .then(response => {
             this.currentStudent = response.data;
+
             console.log(response.data);
           })
           .catch(e => {
             console.log(e);
           });
+
+
+    const parameters = this.$route.query;
+      message: ''
     },
+
+
+  methods: {
+
     updateActive(status) {
       var data = {
         id: this.currentStudent.id,
@@ -98,7 +103,7 @@ export default {
             console.log(response.data);
             this.message = 'The student was updated successfully!';
 
-            this.$router.push({ name: "students" });
+            this.$router.push({ s: "students" });
           })
           .catch(e => {
             console.log(e);
@@ -117,7 +122,8 @@ export default {
   },
   mounted() {
     this.message = '';
-    this.getStudent(this.$route.params.id);//mount ngay sau khi component dc khoi chay
+    // this.getStudent(this.id);
+    console.log(this.id)//mount ngay sau khi component dc khoi chay
   }
 };
 </script>
