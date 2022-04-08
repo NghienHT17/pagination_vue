@@ -1,12 +1,12 @@
 import {createRouter, createWebHistory} from "vue-router";
 const routes=[
-    {
-        path:"/",
-        alias: "/students",
-        name:"students",
-        component: import("./components/StudentList")
-
-    },
+    // {
+    //     path:"/",
+    //     alias: "/students",
+    //     name:"students",
+    //     component: import("./components/StudentList")
+    //
+    // },
     {
         path:"/add",
         name:"add",
@@ -17,8 +17,8 @@ const routes=[
         name:"student-details",
         component: import("./components/Student")
     },
-    {
-        path:"/getByPaging",
+    {   path:"/",
+        alias:"/getByPaging",
         name:"paging-list",
         component: import("./components/PagingList")
     }

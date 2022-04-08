@@ -15,20 +15,37 @@
   <div class="col-md-12">
     <div class="mb-3">
       Students per Page:
-      <select v-model="pageSize" @change="handlePageSizeChange()">
+      <select v-model="pageSize" v-on:change="handlePageSizeChange()">
         <option v-for="size in pageSizes" :key="size" :value="size">
           {{ size }}
         </option>
       </select>
     </div>
-    <b-pagination
-        v-model="page"
-        :total-rows="count"
-        :per-page="pageSize"
-        prev-text="Prev"
-        next-text="Next"
-        @change="handlePageChange"
-    ></b-pagination>
+
+
+    <!--    <div class="demo-pagination-block">-->
+    <!--      <div class="demonstration">Total item count</div>-->
+    <!--      <el-pagination-->
+    <!--          v-model:currentPage="page"-->
+    <!--          :page-size="pageSize"-->
+
+
+    <!--          layout="total, prev, pager, next"-->
+    <!--          :total="count"-->
+    <!--          @size-change="handlePageSizeChange"-->
+    <!--          @current-change="handlePageChange"-->
+    <!--      />-->
+    <!--    </div>-->
+    <!--    <b-pagination-->
+    <!--        v-model="page"-->
+
+    <!--        :total-rows="count"-->
+    <!--        :per-page="pageSize"-->
+    <!--        prev-text="Prev"-->
+    <!--        next-text="Next"-->
+    <!--        @change="handlePageChange"-->
+    <!--    ></b-pagination>-->
+    <!--        currentpage-->
   </div>
   <h3>Student List</h3>
   <table class="table">
@@ -47,12 +64,12 @@
         :key=student.id
     >
 
-      <th scope="row">{{student.id}}</th>
-      <td>{{student.name}}</td>
-      <td>{{student.age}}</td>
-      <td>{{student.active}}</td>
+      <th scope="row">{{ student.id }}</th>
+      <td>{{ student.name }}</td>
+      <td>{{ student.age }}</td>
+      <td>{{ student.active }}</td>
       <td>
-        <button @click="editStudent(student)"  type="button" class="btn btn-warning">
+        <button @click="editStudent(student)" type="button" class="btn btn-warning">
           <!--        <a href="'/students/' + {{student.id}}">-->
           Edit
           <!--        </a>-->
@@ -73,6 +90,17 @@
     Remove All
   </button>
 
+  <div>
+    <button @click="prevPage">Prev</button>
+    <button @click="nextPage">Next</button>
+    <ul id="ul-list-page">
+      <li v-for="numPage in numPagesList" :key="numPage">
+        <button @click="handlePageChange(numPage)">{{ numPage }}</button>
+      </li>
+    </ul>
+
+  </div>
+
 
 </template>
 
@@ -82,12 +110,22 @@ import StudentsDataServices from "../service/StudentsDataServices";
 // // import Student from "@/components/Student";
 
 export default {
+  created() {
+    this.getStudentList();
+    console.log(this.count)
+
+
+  },
   name: "paging-list",
+
   data() {
     return {
+      numPagesList: [],
+      numPages: null,
+      // numPage: null,
       nameToSearch: "",
       students: [],
-      currentIndex: -1,
+      // currentIndex: -1,
       currentStudent: null,
       searchName: "",
       page: 1,
@@ -100,10 +138,10 @@ export default {
   },
 
   methods: {
-    getRequestParams(nameToSearch, page, pageSize) {
+    getRequestParams(searchString, page, pageSize) {
       let params = {};
-      if (nameToSearch) {
-        params["name"] = nameToSearch;
+      if (searchString) {
+        params["name"] = searchString;
       }
       if (page) {
         params["page"] = page - 1;
@@ -113,6 +151,7 @@ export default {
       }
       return params;
     },
+
     getStudentList() {
       const params = this.getRequestParams(
           this.nameToSearch,
@@ -121,14 +160,37 @@ export default {
       );
       StudentsDataServices.getAll(params)
           .then((response) => {
-            const { students, totalStudents } = response.data;
-            this.students = students;
+            console.log(response);
+            console.log(params);
+            const {studentList, totalStudents} = response.data;
+            this.students = studentList;
             this.count = totalStudents;
+
+
+            if (this.count % this.pageSize == 0) {
+              this.numPages = this.count / this.pageSize
+            } else {
+              let result = this.count / this.pageSize;
+              this.numPages = Math.floor(result) +1;
+              console.log(this.numPages)
+            }
+            this.numPagesList = Array.from(Array(this.numPages).keys());
+            console.log(this.numPagesList);
             console.log(response.data);
           })
           .catch((e) => {
             console.log(e);
           });
+    },
+    prevPage() {
+      this.page -= 1;
+      this.getStudentList();
+      console.log(this.page);
+    },
+    nextPage() {
+      this.page += 1;
+      this.getStudentList();
+      console.log(this.page);
     },
     handlePageChange(value) {
       this.page = value;
@@ -137,34 +199,26 @@ export default {
     handlePageSizeChange() {
 
       this.page = 1;
-      this.getStudentList();
+      alert('xin chao' + this.pageSize);
+      this.getStudentList(null, this.page, this.pageSize);
     },
-    // searchName() {
-    //   StudentsDataServices.findByName(this.name)
-    //       .then(response => {
-    //         this.students = response.data;
-    //         console.log(response.data);
-    //       })
-    //       .catch(e => {
-    //         console.log(e);
-    //       });
-    // },
-    addStudent(){
-      this.$router.push({ name: "add"});
+
+    addStudent() {
+      this.$router.push({name: "add"});
     },
 
 
-    editStudent(student){
+    editStudent(student) {
       const id = student.id;
-      this.$emit('selectedStudent',student)
+      this.$emit('selectedStudent', student)
       // this.currentIndex = student.id;
-      this.$router.push({path:`/students/${id}`});
+      this.$router.push({path: `/students/${id}`});
       // this.$router.push({ name: "/students/"+ student.id});
 
 
     },
-    deleteStudent(student){
-      this.currentStudent= student;
+    deleteStudent(student) {
+      this.currentStudent = student;
       StudentsDataServices.delete(this.currentStudent.id)
           .then(response => {
             console.log(response.data);
@@ -187,38 +241,38 @@ export default {
             console.log(e);
           });
     },
-    refreshList(){
+    refreshList() {
       this.getStudentList();
       this.currentStudent = null;
-      this.currentIndex = -1;
+      // this.currentIndex = -1;
     }
   },
-  mounted() {
-    this.getStudentList();
-    //tại sao báo ko dùng ???
+  // mounted() {
+  //
+  //
+  //   this.getStudentList();
+  //
+  // },
+  beforeUpdate() {
+
   }
+
+
 
 //cần chạy hàm refreshList
 }
 </script>
 
-<style>
 
+<style scoped>
+/*.demo-pagination-block + .demo-pagination-block {*/
+/*  margin-top: 10px;*/
+/*}*/
+.demo-pagination-block .demonstration {
+  margin-bottom: 16px;
+}
+#ul-list-page li{
+  display: inline;
+}
 </style>
-<!--// updateStudent(student){-->
-<!--//   //cần truyền tham số vào thằng update nếu ko sẽ nhảy sang component student-->
-<!--//   this.currentStudent= student;-->
-<!--//   StudentsDataServices.update(this.currentStudent.id, this.currentStudent)-->
-<!--//       //logic xử lí thế này là sai, chỗ này cần truyền data của curentindex,student sang cho thằng student.vue-->
-<!--//       .then(response => {-->
-<!--//         console.log(response.data);-->
-<!--//         // this.message = 'The student was updated successfully!';-->
-<!--//-->
-<!--//         console.log("student was updated!")-->
-<!--//-->
-<!--//         this.$router.push({ name: "students" });-->
-<!--//       })-->
-<!--//       .catch(e => {-->
-<!--//         console.log(e);-->
-<!--//       });-->
-<!--// },-->
+

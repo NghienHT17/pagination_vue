@@ -52,28 +52,36 @@ import StudentsDataServices from "@/service/StudentsDataServices";
 import StudentList from "@/components/StudentList";
 */
 export default {
+  name: "student_compo",
   created() {
     console.log(this.$route);
-    this.id=this.$route.params.id;
+    this.id = this.$route.params.id;
     console.log("//////////");
     console.log(this.id);
     console.log("//////////");
 
-      // id = this.$route.params.id
+    // id = this.$route.params.id
 
-      StudentsDataServices.get(this.id)
-          .then(response => {
-            this.currentStudent = response.data;
+    StudentsDataServices.get(this.id)
+        .then(response => {
+          this.currentStudent = response.data;
 
-            console.log(response.data);
-          })
-          .catch(e => {
-            console.log(e);
-          });
+          console.log(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+  },
+  data(){
+    return {
+      currentStudent: {
+        id: null,
+        name: "loading",
+        age: null,
 
-
-    const parameters = this.$route.query;
+      },
       message: ''
+    };
     },
 
 
@@ -103,7 +111,7 @@ export default {
             console.log(response.data);
             this.message = 'The student was updated successfully!';
 
-            this.$router.push({ s: "students" });
+            this.$router.push({ name: "paging-list"});
           })
           .catch(e => {
             console.log(e);
