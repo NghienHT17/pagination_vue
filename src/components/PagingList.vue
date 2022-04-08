@@ -85,21 +85,32 @@
     </tr>
     </tbody>
   </table>
-  <button @click="addStudent" type="button" class="m-6 btn btn-sm btn-primary">Add</button>
-  <button class="m3 btn btn-sm btn-danger" @click="removeAllStudents">
-    Remove All
-  </button>
 
+  <br>
   <div>
-    <button @click="prevPage">Prev</button>
-    <button @click="nextPage">Next</button>
-    <ul id="ul-list-page">
+
+
+    <ul class="pagination-item">
+      <li>
+        <button @click="prevPage">Prev</button>
+      </li>
       <li v-for="numPage in numPagesList" :key="numPage">
         <button @click="handlePageChange(numPage)">{{ numPage }}</button>
+      </li>
+      <li>
+        <button @click="nextPage">Next</button>
       </li>
     </ul>
 
   </div>
+
+  <br>
+
+
+  <button @click="addStudent" type="button" class="m-6 btn btn-sm btn-primary">Add</button>
+  <button class="m3 btn btn-sm btn-danger" @click="removeAllStudents">
+    Remove All
+  </button>
 
 
 </template>
@@ -171,10 +182,12 @@ export default {
               this.numPages = this.count / this.pageSize
             } else {
               let result = this.count / this.pageSize;
-              this.numPages = Math.floor(result) +1;
+              this.numPages = Math.floor(result) + 1;
               console.log(this.numPages)
             }
             this.numPagesList = Array.from(Array(this.numPages).keys());
+            this.numPagesList.shift();
+
             console.log(this.numPagesList);
             console.log(response.data);
           })
@@ -271,8 +284,9 @@ export default {
 .demo-pagination-block .demonstration {
   margin-bottom: 16px;
 }
-#ul-list-page li{
-  display: inline;
+
+.pagination-item li {
+  display: inline-block;
 }
 </style>
 
