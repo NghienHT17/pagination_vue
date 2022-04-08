@@ -48,9 +48,7 @@
 <script>
 
 import StudentsDataServices from "@/service/StudentsDataServices";
-/*
-import StudentList from "@/components/StudentList";
-*/
+
 export default {
   name: "student_compo",
   created() {
@@ -130,8 +128,7 @@ export default {
   },
   mounted() {
     this.message = '';
-    // this.getStudent(this.id);
-    console.log(this.id)//mount ngay sau khi component dc khoi chay
+    console.log(this.id);
   }
 };
 </script>

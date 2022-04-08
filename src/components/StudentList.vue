@@ -35,11 +35,9 @@
       <td>{{student.active}}</td>
       <td>
         <button @click="editStudent(student)"  type="button" class="btn btn-warning">
-<!--        <a href="'/students/' + {{student.id}}">-->
-          Edit
-<!--        </a>-->
 
-<!--        //lam sai, dung ra can truyen data cua thang currentstudent vao thang component Student-->
+          Edit
+
       </button>
         <button @click="deleteStudent(student)" type="button" class="btn btn-danger">
           Delete
@@ -60,8 +58,7 @@
 
 <script>
 import StudentsDataServices from "../service/StudentsDataServices";
-// import student from "@/components/Student";
-// // import Student from "@/components/Student";
+
 
 export default {
   name: "student-list",
@@ -118,8 +115,7 @@ export default {
       StudentsDataServices.delete(this.currentStudent.id)
           .then(response => {
             console.log(response.data);
-            // this.$router.push({ name: '/'});
-            // đang để phương thức là delete, giờ phải chuyển thành get
+
             this.refreshList();
           })
           .catch(e => {
@@ -145,30 +141,13 @@ export default {
   },
   mounted() {
     this.getStudentList();
-    //tại sao báo ko dùng ???
+
   }
 
-//cần chạy hàm refreshList
 }
 </script>
 
 <style>
 
 </style>
-<!--// updateStudent(student){-->
-<!--//   //cần truyền tham số vào thằng update nếu ko sẽ nhảy sang component student-->
-<!--//   this.currentStudent= student;-->
-<!--//   StudentsDataServices.update(this.currentStudent.id, this.currentStudent)-->
-<!--//       //logic xử lí thế này là sai, chỗ này cần truyền data của curentindex,student sang cho thằng student.vue-->
-<!--//       .then(response => {-->
-<!--//         console.log(response.data);-->
-<!--//         // this.message = 'The student was updated successfully!';-->
-<!--//-->
-<!--//         console.log("student was updated!")-->
-<!--//-->
-<!--//         this.$router.push({ name: "students" });-->
-<!--//       })-->
-<!--//       .catch(e => {-->
-<!--//         console.log(e);-->
-<!--//       });-->
-<!--// },-->
+

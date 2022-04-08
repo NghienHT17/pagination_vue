@@ -22,30 +22,6 @@
       </select>
     </div>
 
-
-    <!--    <div class="demo-pagination-block">-->
-    <!--      <div class="demonstration">Total item count</div>-->
-    <!--      <el-pagination-->
-    <!--          v-model:currentPage="page"-->
-    <!--          :page-size="pageSize"-->
-
-
-    <!--          layout="total, prev, pager, next"-->
-    <!--          :total="count"-->
-    <!--          @size-change="handlePageSizeChange"-->
-    <!--          @current-change="handlePageChange"-->
-    <!--      />-->
-    <!--    </div>-->
-    <!--    <b-pagination-->
-    <!--        v-model="page"-->
-
-    <!--        :total-rows="count"-->
-    <!--        :per-page="pageSize"-->
-    <!--        prev-text="Prev"-->
-    <!--        next-text="Next"-->
-    <!--        @change="handlePageChange"-->
-    <!--    ></b-pagination>-->
-    <!--        currentpage-->
   </div>
   <h3>Student List</h3>
   <table class="table">
@@ -70,11 +46,8 @@
       <td>{{ student.active }}</td>
       <td>
         <button @click="editStudent(student)" type="button" class="btn btn-warning">
-          <!--        <a href="'/students/' + {{student.id}}">-->
           Edit
-          <!--        </a>-->
 
-          <!--        //lam sai, dung ra can truyen data cua thang currentstudent vao thang component Student-->
         </button>
         <button @click="deleteStudent(student)" type="button" class="btn btn-danger">
           Delete
@@ -117,8 +90,7 @@
 
 <script>
 import StudentsDataServices from "../service/StudentsDataServices";
-// import student from "@/components/Student";
-// // import Student from "@/components/Student";
+
 
 export default {
   created() {
@@ -224,9 +196,9 @@ export default {
     editStudent(student) {
       const id = student.id;
       this.$emit('selectedStudent', student)
-      // this.currentIndex = student.id;
+
       this.$router.push({path: `/students/${id}`});
-      // this.$router.push({ name: "/students/"+ student.id});
+
 
 
     },
@@ -235,8 +207,6 @@ export default {
       StudentsDataServices.delete(this.currentStudent.id)
           .then(response => {
             console.log(response.data);
-            // this.$router.push({ name: '/'});
-            // đang để phương thức là delete, giờ phải chuyển thành get
             this.refreshList();
           })
           .catch(e => {
@@ -257,22 +227,14 @@ export default {
     refreshList() {
       this.getStudentList();
       this.currentStudent = null;
-      // this.currentIndex = -1;
+
     }
   },
-  // mounted() {
-  //
-  //
-  //   this.getStudentList();
-  //
-  // },
-  beforeUpdate() {
-
-  }
 
 
 
-//cần chạy hàm refreshList
+
+
 }
 </script>
 
